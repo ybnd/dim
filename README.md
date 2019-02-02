@@ -1,6 +1,7 @@
 # dim
 
 `xrandr` brightness settings shorthand for multiple monitors.
+Doesn't work under `wayland`.
 
 #### Setup
 
