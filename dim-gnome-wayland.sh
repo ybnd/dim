@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Requirements:
+#   - install ddcutil
+#   - install i2c-tools ~ i2c-dev module must be running (modprobe i2c-dev, add to /etc/modules-load.d/modules.conf to load on boot)
+#   - make an i2c group
+#   - add user to i2c group (usermod -aG i2c $user) and make sure that the i2c group has rw access to /dev/i2c-*
+
 # Reset option argument environment variable
 OPTIND=1
 
