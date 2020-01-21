@@ -11,7 +11,9 @@
 # Read ~/.dim
 brightness=$(awk -F "=" '/brightness/ {print $2}' ~/.dim)
 prev_brightness=$brightness
-display=$(awk -F "=" '/display/ {print $2}' ~/.dim)
+display0=$(awk -F "=" '/display0/ {print $2}' ~/.dim)
+display1=$(awk -F "=" '/display1/ {print $2}' ~/.dim)   # todo: should handle arbitrary nuùber of displays
+                                                        # todo: if not set in ~/.dim, try to query ddcutil, or at least warn the user
 
 
 if [[ $1 =~ ^[0-9]+$ ]] ;
@@ -42,7 +44,8 @@ fi
 let "dbrightness = $brightness"
 
 # Send DDC in parallel
-ddcutil -b 6 setvcp 10 $dbrightness &ddcutil -b 9 setvcp 10 $dbrightness &&disown  # Look up i2c bus(es) for display!
+# todo: should reformat this to handle more than 2 displays in a readable way while stil running all displays in parallel
+ddcutil -b $display0 setvcp 10 $dbrightness &ddcutil -b $display1 setvcp 10 $dbrightness &&disown  # Look up i2c bus(es) for display!
 
 # Write the new brightness to ~/.dim
 sed -i "s/^brightness=$prev_brightness/brightness=$brightness/" ~/.dim
