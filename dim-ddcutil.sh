@@ -15,7 +15,7 @@
 
 
 # Read ~/.dim
-brightness=$(awk -F "=" '/brightness/ {print $2}' ~/.config/dim)
+old_brightness=$(awk -F "=" '/brightness/ {print $2}' ~/.config/dim)
 
 
 if [[ $1 =~ ^[0-9]+$ ]] ;
@@ -23,7 +23,8 @@ then
     # If first argument is numeric, just set that as the brightness
     brightness=$1
 else
-    # Parse commandline arguments & get new brightness value    
+    # Parse commandline arguments & get new brightness value
+    brightness=$old_brightness
     while getopts ":configure:" opt; do
         case $opt in
         	configure)
@@ -37,16 +38,15 @@ else
         esac
     done
 fi
-let "dbrightness = $brightness"  # todo: what is this and why
 
 declare -a DISPLAY
 IFS=", " read -a DISPLAY <<< "$(awk -F "=" '/display/ {print $2}' ~/.config/dim)"
 
 for b in "${DISPLAY[@]}"
 do
-	ddcutil -b $b setvcp 10 $dbrightness &  # apply in parallel!
+	ddcutil -b $b setvcp 10 $brightness &  # apply in parallel!
 done
 
 # Write the new brightness to ~/.config/dim
 sed -i "s/^brightness=.*/brightness=$brightness/" ~/.config/dim
-echo "brightness=$brightness"
+echo "brightness=$old_brightness->$brightness"
