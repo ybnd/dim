@@ -14,7 +14,7 @@
 # todo: deal with uninitialized ~/.config/dim
 
 
-# Read ~/.dim
+# Read ~/.config/dim
 old_brightness=$(awk -F "=" '/brightness/ {print $2}' ~/.config/dim)
 
 
